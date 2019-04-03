@@ -1,0 +1,48 @@
+---
+title: "Lab 11"
+author: "Adam Hayes, Erin Omyer, Richard Park, Jasmine Sanchez"
+date: "4/3/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+###Adam's Findings
+
+```{r}
+library(tidyverse)
+library(babynames)
+
+data <- babynames
+
+names <- babynames %>%
+  group_by(year)%>%
+  summarise(total = sum(n))
+
+ada <- babynames %>%
+  filter(str_detect(name, "^Ada"))%>%
+  group_by(year)%>%
+  summarise(num_ada = sum(n))
+
+ada2 <- babynames %>%
+  filter(str_detect(name, "^Adam$"))%>%
+  group_by(year)%>%
+  summarise(num_adam = sum(n))
+
+newdata <- ada %>%
+  left_join(names, by = "year")%>%
+  mutate(prop = num_ada / total)
+
+newnewdata <- newdata %>%
+  left_join(ada2, by = "year") %>%
+  mutate(prop_adam = num_adam / total)
+
+ggplot(data = newnewdata)+
+  geom_line(mapping = aes(x = year, y = prop), color = "red")+
+  geom_line(mapping = aes(x = year, y = prop_adam))+
+  labs(title = "Prop of names starting with Ada(red) and babies named Adam(black) by year")
+```
+
