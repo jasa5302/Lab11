@@ -8,7 +8,64 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+###Ariel and Rachel Regexs
+```{r}
+girls1 <- filter(babynames,str_detect(babynames$name,"A"),year==1988,sex=="F")
+girls2 <- filter(babynames,str_detect(babynames$name,"A"),year==1990,sex=="F")
 
+girls <- inner_join(girls1,girls2,by="name") %>% mutate(diff=prop.y-prop.x) %>% select(name,prop.x,prop.y,diff)
+
+filter(babynames,str_detect(babynames$name,"Ra[ey]?ch.*l"),year == 1973, sex == "F") %>% count(wt=n) 
+#8346
+
+filter(babynames,str_detect(babynames$name,"Ra[ey]?ch.*l"),year == 1988, sex == "F") %>% count(wt=n) 
+#19946
+
+filter(babynames,str_detect(babynames$name,"Ra[ey]?ch.*l"),year == 1990,sex == "F") %>% count(wt=n) 
+#20369
+
+filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year == 1973, sex == "F") %>% count(wt=n) 
+#52
+
+filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year == 1988, sex == "F") %>% count(wt=n) 
+#1617	
+
+filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year == 1990,sex == "F") %>% count(wt=n) 
+#5366
+
+```
+####Comments
+The name Rachel in comparison to Ariel was more popular. In 1973, the variation of the name Rachel began with 8,346, but then drastically grew to 20,369 in 1990. 
+
+###The Little Mermaid Effect
+```{r}
+library(tidyverse)
+library(babynames)
+
+filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year == 1973, sex == "F") %>% count(wt=prop) 
+#3.346e-05
+
+filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year == 1988, sex == "F") %>% count(wt=prop) #0.000841196	
+
+filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year == 1990,sex == "F") %>% count(wt=prop) #0.002612356
+
+girls1 <- filter(babynames,str_detect(babynames$name,"A"),year==1988,sex=="F")
+girls2 <- filter(babynames,str_detect(babynames$name,"A"),year==1990,sex=="F")
+
+girls <- inner_join(girls1,girls2,by="name") %>% mutate(diff=prop.y-prop.x) %>% select(name,prop.x,prop.y,diff)
+
+Ariel <- filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year%in%c(1973,1988,1990)) 
+
+Arieldifference <- filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year==1990,sex=="F") %>% count(wt=prop) - filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year==1988,sex=="F") %>% count(wt=prop)
+Arieldifference
+#0.00177145
+
+change <- filter(girls, diff < Arieldifference) %>% count() / girls %>% count()
+change
+#100 percentile
+```
+####The Change in proportion in female Ariel baby names
+The release of The Little Mermaid with the main character named Ariel did cause an increase in popularity of the name. In 1973, there was a total of 52 females with the name Ariel. In 1988, the count increased roughly to 1,617 females with the name Ariel, but jumped in the year 1990 to a total of 5,366.As you examine the proportions calculated for the amount of females with the name Ariel, you find that there was a higher proportion in the year 1990. The movie was released in 1989, so the release of the movie caused an influx from the proportion of 0.00084 in 1988 to 0.0026 in 1990 for the name Ariel. The Little Mermaid cause the popularity to increase. When the proportion difference was calculated between 1988 to 1990, the proportion for female names with Ariel was low, in comparison, to the other names being chosen for babies.
 
 ###Adam's Findings
 
@@ -87,5 +144,43 @@ ggplot(data = Newnamesdata)+
   geom_point(mapping = aes(x = year, y = proportion_Richard),color = "Red")+
   labs(title = "The Proportion of names that start with Ric(in blue) and babies named Richard(in red) by each year")
 ```
-
+####Comments
 My name's popularity compared to when I was born (in 1999) has declined. As seen in the ggplot, the red dots are on a downward slope which indicates that there was a downward decline in popularity. Furthermore, my name is currently not as popular compared to other names that start with the same 3 letters because the blue dots (which indicate the proportion of all names that start with "Ric") is higher than the red dots which shows that there are a lot of other names that start with "Ric". If the blue dots and red dots were a lot closer together then my name would be extremely popular among babies whose names started with "Ric".
+
+###Erin's Findings
+```{r}
+library(tidyverse)
+library(babynames)
+
+dataset <- babynames
+
+selectName <- babynames %>%
+  group_by(year) %>%
+  summarise(total = sum(n))
+
+ERI_names <- babynames %>%
+  filter(str_detect(name, "^Eri")) %>%
+  group_by(year) %>%
+  summarise(num_ERI = sum(n))
+
+ERIN_names <- babynames %>%
+  filter(str_detect(name, "^Erin$")) %>%
+  group_by(year) %>%
+  summarise(num_ERIN = sum(n))
+
+data2 <- ERI_names %>%
+  left_join(selectName, by = "year") %>%
+  mutate(proportion = num_ERI / total)
+
+data3 <- data2 %>%
+  left_join(ERIN_names, by = "year") %>%
+  mutate(proportionERIN = num_ERIN / total)
+
+ggplot(data = data3) +
+  geom_line(mapping = aes(x = year, y = proportion), color = "pink") + 
+  geom_line(mapping = aes(x = year, y = proportionERIN), color = "blue") + 
+  labs(title = "Proportion of names starting with 'ERI'(pink) compared to the name 'ERIN'(blue) over time")
+```
+
+####Comments
+In order to find the proportions of names that began with "ERI" or my full name "ERIN", I incorporated the join function to join the babynames dataset for the different manipulated names. As shown by the data, my name wasn't popular until the 1980s where names beginning with "Eri" and named "Erin" peaked. Then, around the time I was born the popularity was declining. The popularity of a name starting with "Eri" was higher than "Erin", because there are various manipulations of name that involve the same three letters, which causes the higher proportion in pink on the graph. 
