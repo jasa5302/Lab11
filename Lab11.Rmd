@@ -86,5 +86,6 @@ ggplot(data = Newnamesdata)+
   geom_point(mapping = aes(x = year, y = prop), color = "Blue")+
   geom_point(mapping = aes(x = year, y = proportion_Richard),color = "Red")+
   labs(title = "The Proportion of names that start with Ric(in blue) and babies named Richard(in red) by each year")
-  
 ```
+
+My name's popularity compared to when I was born (in 1999) has declined. As seen in the ggplot, the red dots are on a downward slope which indicates that there was a downward decline in popularity. Furthermore, my name is currently not as popular compared to other names that start with the same 3 letters because the blue dots (which indicate the proportion of all names that start with "Ric") is higher than the red dots which shows that there are a lot of other names that start with "Ric". If the blue dots and red dots were a lot closer together then my name would be extremely popular among babies whose names started with "Ric".
