@@ -284,7 +284,78 @@ ggplot(data = data3) +
 ####Comments
 In order to find the proportions of names that began with "ERI" or my full name "ERIN", I incorporated the join function to join the babynames dataset for the different manipulated names. As shown by the data, my name wasn't popular until the 1980s where names beginning with "Eri" and named "Erin" peaked. Then, around the time I was born the popularity was declining. The popularity of a name starting with "Eri" was higher than "Erin", because there are various manipulations of name that involve the same three letters, which causes the higher proportion in pink on the graph. 
 
+###Jasmine's Findings
+```{r}
+babies <- babynames
 
+names <- babies %>%
+  group_by(year)%>%
+  summarise(total = sum(n))
+
+jas <- babies %>%
+  filter(str_detect(name, "^Jas"))%>%
+  group_by(year)%>%
+  summarise(num_jas = sum(n))
+
+jas2 <- babies %>%
+  filter(str_detect(name, "^Jasmine$"))%>%
+  group_by(year)%>%
+  summarise(num_Jasmine = sum(n))
+
+new_babies <- jas %>%
+  left_join(names, by = "year")%>%
+  mutate(num_jas, jas_prop = num_jas / total)
+
+
+new_babies2 <- new_babies %>%
+  left_join(jas2, by = "year") %>%
+  mutate(num_Jasmine, Jasmine_prop = num_Jasmine / total)
+
+
+
+ggplot(data = new_babies2)+
+  geom_col(mapping = aes(x = year, y = Jasmine_prop), color = 'green', na.rm = TRUE, position = "stack")+
+   labs(title = "Prop of babies named Jasmine")
+ggplot(data = new_babies2)+
+  geom_col(mapping = aes(x = year, y = jas_prop), color = 'purple', na.rm = TRUE, position = "stack")+
+  labs(title = "Prop of names starting with Jas")
+```
+
+####Initial Comments
+
+```{r}
+jasmine1 <- babies %>%
+  filter(str_detect(name, "^Jasmine$"))%>%
+  filter(year > 1998)%>%
+  group_by(year)%>%
+  summarise(num_Jasmine1 = sum(n))%>%
+  mutate(num_Jasmine1, total = sum(num_Jasmine1))
+
+jasmine2 <- babies %>%
+  filter(str_detect(name, "^Jasmine$"))%>%
+  filter(year < 2000, year > 1980)%>%
+  group_by(year)%>%
+  summarise(num_Jasmine2 = sum(n))%>%
+  mutate(num_Jasmine2, total1 = sum(num_Jasmine2))
+
+J_percentile1 <- as.tibble(jasmine1)%>%
+  mutate(percentile = ((num_Jasmine1/total)/(1999-1981))*100)
+J_percentile1
+
+J_percentile2 <- as.tibble(jasmine2) %>%
+  mutate(percentile1 = ((num_Jasmine2/total1)/(2017- 1999))*100)
+J_percentile2
+  
+
+```
+####Comments Continued 
+
+
+```{r}
+#ggplot(J_percentile1, aes(num_Jasmine1), fill = jasmine1) +
+#  geom_histogram(binwidth = 0.1)
+```
+#### Final Comments
 
 ###WHO DID WHAT
 Adam created new data tables and calculated proportions of babies named Adam compared to babies with names starting with "Ada" and graphed the two together.  He also created graphs showing the trend in popularity of his name over the 22 years before he was born, until 2017.  He then calculated the percentiles of percentage of babies named Adam by year.
