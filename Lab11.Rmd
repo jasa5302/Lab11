@@ -190,9 +190,31 @@ ggplot(data = Newnamesdata)+
   geom_point(mapping = aes(x = year, y = prop), color = "Blue")+
   geom_point(mapping = aes(x = year, y = proportion_Richard),color = "Red")+
   labs(title = "The Proportion of names that start with Ric(in blue) and babies named Richard(in red) by each year")
+
+BirthYearName <- babynames %>%
+  filter(year == 1999) %>%
+  filter(str_detect(name, "^Richard$")) %>%
+  summarise(number_Richardbirth = sum(n)) 
+
+BirthYearName
+
+CurrentName <- babynames %>%
+  filter(year == 2017) %>%
+  filter(str_detect(name, "^Richard$")) %>%
+  summarise(number_Richardcurrent = sum(n))
+
+CurrentName
+
+BeforeBirthYearName <- babynames %>%
+  filter(year == 1981) %>%
+  filter(str_detect(name, "^Richard$")) %>%
+  summarise(number_Richardbefore = sum(n))
+
+BeforeBirthYearName
+
 ```
 ####Comments
-My name's popularity compared to when I was born (in 1999) has declined. As seen in the ggplot, the red dots are on a downward slope which indicates that there was a downward decline in popularity. Furthermore, my name is currently not as popular compared to other names that start with the same 3 letters because the blue dots (which indicate the proportion of all names that start with "Ric") is higher than the red dots which shows that there are a lot of other names that start with "Ric". If the blue dots and red dots were a lot closer together then my name would be extremely popular among babies whose names started with "Ric".
+To begin, I had to find the proportions of names that began with "RIC" or my full name "Richard," so I utilized the left join function to combine the babynames dataset. My name's popularity compared to when I was born (in 1999) has declined. As seen in the ggplot, the red dots are on a downward slope which indicates that there was a downward decline in popularity. Furthermore, my name is currently not as popular compared to other names that start with the same 3 letters because the blue dots (which indicate the proportion of all names that start with "Ric") is higher than the red dots which shows that there are a lot of other names that start with "Ric". If the blue dots and red dots were a lot closer together then my name would be extremely popular among babies whose names started with "Ric". Lastly, my name was much more popular in my birth year (with 6514 babies named Richard) compared to 2017 which had only 2269 babies named Richard. That was a total difference of 4245 baby names! Further analysis revealed that my name 18 years before my birth year was, again, much more popular. In 1981, the number of babies named Richard amounted to 16972, whereas, my birth year only had 6514 babies named Richard. That was a difference of 10458 baby names, which also emphasizes how drastically unpopular my name is becoming.
 
 ###Erin's Findings
 ```{r}
