@@ -249,7 +249,32 @@ ggplot(data = data3) +
   geom_line(mapping = aes(x = year, y = proportion), color = "pink") + 
   geom_line(mapping = aes(x = year, y = proportionERIN), color = "blue") + 
   labs(title = "Proportion of names starting with 'ERI'(pink) compared to the name 'ERIN'(blue) over time")
-```
+BirthYearErin <- babynames %>%
+  filter(year == 2000) %>%
+  filter(str_detect(name, "^Erin$")) %>%
+  summarise(numErinbirthyear = sum(n)) 
 
+CurrentYearErin <- babynames %>%
+  filter(year == 2017) %>%
+  filter(str_detect(name, "^Richard$")) %>%
+  summarise(numErincurrent = sum(n))
+
+BeforeBirthYearErin <- babynames %>%
+  filter(year == 1993) %>%
+  filter(str_detect(name, "^Richard$")) %>%
+  summarise(numErinbefore = sum(n))
+```
+```{r echo = FALSE, results = 'asis'}
+library(knitr)
+kable(BirthYearErin, caption = "The popularity in the name 'Erin' when I was born")
+```
+```{r echo = FALSE, results = 'asis'}
+library(knitr)
+kable(CurrentYearErin, caption = "The popularity in the name 'Erin' currently")
+```
+```{r echo = FALSE, results = 'asis'}
+library(knitr)
+kable(BeforeBirthYearErin, caption = "The popularity in 'Erin' 7 years before 2000(birth year)")
+```
 ####Comments
-In order to find the proportions of names that began with "ERI" or my full name "ERIN", I incorporated the join function to join the babynames dataset for the different manipulated names. As shown by the data, my name wasn't popular until the 1980s where names beginning with "Eri" and named "Erin" peaked. Then, around the time I was born the popularity was declining. The popularity of a name starting with "Eri" was higher than "Erin", because there are various manipulations of name that involve the same three letters, which causes the higher proportion in pink on the graph. 
+In order to find the proportions of names that began with "ERI" or my full name "ERIN", I incorporated the join function to join the babynames dataset for the different manipulated names. As shown by the data, my name wasn't popular until the 1980s where names beginning with "Eri" and named "Erin" peaked. Then, around the time I was born the popularity was declining. The popularity of a name starting with "Eri" was higher than "Erin", because there are various manipulations of name that involve the same three letters, which causes the higher proportion in pink on the graph. My name was the most popular the years before I was born in 2000 with roughly 10,255 people with the name. Then, the year I was born it declined to 5,282 people and now there is roughly 2,269. The popularity has been declining over the years. 
