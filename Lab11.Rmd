@@ -7,8 +7,12 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(babynames)
 ```
+
 ###Ariel and Rachel Regexs
+
 ```{r}
 Anames <- filter(babynames,str_detect(babynames$name,"A"),year == 1988,sex == "F")
 Anames2 <- filter(babynames,str_detect(babynames$name,"A"),year==1990,sex=="F")
@@ -148,7 +152,30 @@ ggplot(data = newnewdata)+
   geom_line(mapping = aes(x = year, y = prop), color = "red")+
   geom_line(mapping = aes(x = year, y = prop_adam))+
   labs(title = "Prop of names starting with Ada(red) and babies named Adam(black) by year")
+
+FromBirth <- newnewdata %>%
+  select(year,num_adam, prop_adam)%>%
+  filter(between(year,1996,2017))
+  
+
+ggplot(data = FromBirth)+
+  geom_line(mapping = aes(x = year, y = prop_adam))+
+  labs(title = "Prop of babies named 'Adam' from 1996 - 2017")
+
+BeforeBirth <- newnewdata %>%
+  select(year, num_adam, prop_adam)%>%
+  filter(between(year,1974,1996))
+
+ggplot(data = BeforeBirth)+
+  geom_line(mapping = aes(x = year, y = prop_adam))+
+  labs(title = "Prop of babies named 'Adam' from 1974 - 1996")
 ```
+
+####Comments
+From my first graph I found that there were a much higher proportion of names that started with "Ada" than there were babies actually named "Adam". However this trend changed around 1960, and from about 1960 - 2000 almost all babies with names starting with "Ada" were actually named "Adam", this trend again changed around 2000 where the proportion of babies named "Adam" began to decline, while the proportion of babies with names starting with "Ada" began to increase rather sharply.  From my second set of graphs, I found that there was a spike in popularity of the name Adam from about 1975 - 1985, and then from then until 2017 there has been a steady decline in popularity of the name.
+
+
+
 
 ### Richard's Findings
 
@@ -249,32 +276,7 @@ ggplot(data = data3) +
   geom_line(mapping = aes(x = year, y = proportion), color = "pink") + 
   geom_line(mapping = aes(x = year, y = proportionERIN), color = "blue") + 
   labs(title = "Proportion of names starting with 'ERI'(pink) compared to the name 'ERIN'(blue) over time")
-BirthYearErin <- babynames %>%
-  filter(year == 2000) %>%
-  filter(str_detect(name, "^Erin$")) %>%
-  summarise(numErinbirthyear = sum(n)) 
+```
 
-CurrentYearErin <- babynames %>%
-  filter(year == 2017) %>%
-  filter(str_detect(name, "^Richard$")) %>%
-  summarise(numErincurrent = sum(n))
-
-BeforeBirthYearErin <- babynames %>%
-  filter(year == 1993) %>%
-  filter(str_detect(name, "^Richard$")) %>%
-  summarise(numErinbefore = sum(n))
-```
-```{r echo = FALSE, results = 'asis'}
-library(knitr)
-kable(BirthYearErin, caption = "The popularity in the name 'Erin' when I was born")
-```
-```{r echo = FALSE, results = 'asis'}
-library(knitr)
-kable(CurrentYearErin, caption = "The popularity in the name 'Erin' currently")
-```
-```{r echo = FALSE, results = 'asis'}
-library(knitr)
-kable(BeforeBirthYearErin, caption = "The popularity in 'Erin' 7 years before 2000(birth year)")
-```
 ####Comments
-In order to find the proportions of names that began with "ERI" or my full name "ERIN", I incorporated the join function to join the babynames dataset for the different manipulated names. As shown by the data, my name wasn't popular until the 1980s where names beginning with "Eri" and named "Erin" peaked. Then, around the time I was born the popularity was declining. The popularity of a name starting with "Eri" was higher than "Erin", because there are various manipulations of name that involve the same three letters, which causes the higher proportion in pink on the graph. My name was the most popular the years before I was born in 2000 with roughly 10,255 people with the name. Then, the year I was born it declined to 5,282 people and now there is roughly 2,269. The popularity has been declining over the years. 
+In order to find the proportions of names that began with "ERI" or my full name "ERIN", I incorporated the join function to join the babynames dataset for the different manipulated names. As shown by the data, my name wasn't popular until the 1980s where names beginning with "Eri" and named "Erin" peaked. Then, around the time I was born the popularity was declining. The popularity of a name starting with "Eri" was higher than "Erin", because there are various manipulations of name that involve the same three letters, which causes the higher proportion in pink on the graph. 
