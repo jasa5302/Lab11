@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 ###Ariel and Rachel Regexs
 ```{r}
-girls1 <- filter(babynames,str_detect(babynames$name,"A"),year==1988,sex=="F")
+girls1 <- filter(babynames,str_detect(babynames$name,"A"),year == 1988,sex == "F")
 girls2 <- filter(babynames,str_detect(babynames$name,"A"),year==1990,sex=="F")
 
 girls <- inner_join(girls1,girls2,by="name") %>% mutate(diff=prop.y-prop.x) %>% select(name,prop.x,prop.y,diff)
@@ -49,23 +49,20 @@ filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year == 1988, sex
 
 filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year == 1990,sex == "F") %>% count(wt=prop) #0.002612356
 
-girls1 <- filter(babynames,str_detect(babynames$name,"A"),year==1988,sex=="F")
-girls2 <- filter(babynames,str_detect(babynames$name,"A"),year==1990,sex=="F")
+Arielnames <- filter(babynames, str_detect(babynames$name,"Ar[iy]+.l+[^a]?$")) %>%
+  group_by(year) %>%
+  summarize(proportionAriel = sum(prop))
 
-girls <- inner_join(girls1,girls2,by="name") %>% mutate(diff=prop.y-prop.x) %>% select(name,prop.x,prop.y,diff)
+Allnames <- filter(babynames, str_detect(babynames$name,"A")) %>% group_by(year) %>% summarize(proportionAlll = sum(prop))
 
-Ariel <- filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year%in%c(1973,1988,1990)) 
+ggplot(data = Arielnames) + geom_line(aes(x = year, y = proportionAriel), color = "green") + geom_vline(xintercept = 1989) + ggtitle("The popularity of the name 'Ariel' over time")
 
-Arieldifference <- filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year==1990,sex=="F") %>% count(wt=prop) - filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year==1988,sex=="F") %>% count(wt=prop)
-Arieldifference
-#0.00177145
+ggplot(data = Arielnames) + geom_line(aes(x = year, y = proportionAriel), color = "blue") + geom_vline(xintercept = 1989) + ggtitle("The popularity of the name 'Ariel' in 1988 and 1990") + coord_cartesian(xlim = c(1988,1990))
 
-change <- filter(girls, diff < Arieldifference) %>% count() / girls %>% count()
-change
-#100 percentile
+ggplot(data = Allnames) + geom_line(aes(x = year, y = proportionAlll), color = "red") + geom_vline(xintercept = 1989) + ggtitle("The popularity of all 'A' names over time") + coord_cartesian(xlim = c(2000,2017))
 ```
 ####The Change in proportion in female Ariel baby names
-The release of The Little Mermaid with the main character named Ariel did cause an increase in popularity of the name. In 1973, there was a total of 52 females with the name Ariel. In 1988, the count increased roughly to 1,617 females with the name Ariel, but jumped in the year 1990 to a total of 5,366.As you examine the proportions calculated for the amount of females with the name Ariel, you find that there was a higher proportion in the year 1990. The movie was released in 1989, so the release of the movie caused an influx from the proportion of 0.00084 in 1988 to 0.0026 in 1990 for the name Ariel. The Little Mermaid cause the popularity to increase. When the proportion difference was calculated between 1988 to 1990, the proportion for female names with Ariel was low, in comparison, to the other names being chosen for babies.
+The popularity of the name 'Ariel' increased in popularity between 1988 and 1990. The movie was released in the 1989 between the year range where it increased drastically. In 1988, the proportion of popularity was higher than usual being 0.0008, but then jumped to 0.0026 in 1990 after the release of the movie. The percentile of change in Ariel names ends up being 1, which results to the 100th percentile. No other girl names had the a bigger difference in proportions than the name 'Ariel'. The proportion of names besides 'Ariel' were higher in comparison to babies with the name, as shown on the plots above. At the year 1989, the proportion of 'Ariel' names boomed to almost a proportion of 0.004, but then slowly declined after the year of the movie 'The little Mermaid' being released.Then, looking at the data of the exact year 1989, the proportion of the name 'Ariel' was on a rapid incline after the movie was released. In comparison to other names besides 'Ariel', the proportion trend remainds the same as the years go on, but a slight increase in the beginning of the early 2000s as the popularity of 'Ariel' was on a decline.
 
 ###Adam's Findings
 
