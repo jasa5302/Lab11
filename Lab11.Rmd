@@ -312,20 +312,23 @@ ggplot(data = BeforeBirthERIN)+
 ####Comments
 In order to find the proportions of names that began with "ERI" or my full name "ERIN", I incorporated the join function to join the babynames dataset for the different manipulated names. As shown by the data, my name wasn't popular until the 1980s where names beginning with "Eri" and named "Erin" peaked. Then, around the time I was born the popularity was declining. The popularity of a name starting with "Eri" was higher than "Erin", because there are various manipulations of name that involve the same three letters, which causes the higher proportion in pink on the graph. 
 
+
 ###Jasmine's Findings
 ```{r}
 babies <- babynames
 
 names <- babies %>%
   group_by(year)%>%
-  summarise(total = sum(n))
+  summarise(total = sum(n))%>%
+  left_join(babynames, by ="year")%>%
+  mutate(total)
 
-jas <- babies %>%
+jas <- names %>%
   filter(str_detect(name, "^Jas"))%>%
   group_by(year)%>%
   summarise(num_jas = sum(n))
 
-jas2 <- babies %>%
+jas2 <- names %>%
   filter(str_detect(name, "^Jasmine$"))%>%
   group_by(year)%>%
   summarise(num_Jasmine = sum(n))
@@ -339,51 +342,61 @@ new_babies2 <- new_babies %>%
   left_join(jas2, by = "year") %>%
   mutate(num_Jasmine, Jasmine_prop = num_Jasmine / total)
 
-
-
 ggplot(data = new_babies2)+
-  geom_col(mapping = aes(x = year, y = Jasmine_prop), color = 'green', na.rm = TRUE, position = "stack")+
+  geom_col(mapping = aes(x = year, y = Jasmine_prop), color = 'orange', na.rm = TRUE)+
    labs(title = "Prop of babies named Jasmine")
-ggplot(data = new_babies2)+
-  geom_col(mapping = aes(x = year, y = jas_prop), color = 'purple', na.rm = TRUE, position = "stack")+
+ggplot(data = new_babies)+
+  geom_col(mapping = aes(x = year, y = jas_prop), color = 'yellow', na.rm = TRUE, position = "stack")+
   labs(title = "Prop of names starting with Jas")
 ```
 
-####Initial Comments
+####Initial Comments:
+I found that due to an increase of Ariel names after the release of The Little Mermaid, I found an opposing trend with the name, Jasmine. The movie, Aladdin, was released just three short years after The Little Mermaid. In the graphs shown above, we can clearly see that there was a fluctuating deecrease in babies with the name "Jasmine" starting after the early 1990's becuase as we approach the 2000's, the name "Jasmine" was becoming less frequently used. There was however, a spike in the 30 year gap before the movie's release and I would argue that it was due to the publishing of the original book, Aladdin. Once the movie had been released, there was an increase in commonality and led to a decrease in number of babies being named "Jasmine". 
 
 ```{r}
-jasmine1 <- babies %>%
+jasmine1 <- names %>%
   filter(str_detect(name, "^Jasmine$"))%>%
   filter(year > 1998)%>%
   group_by(year)%>%
   summarise(num_Jasmine1 = sum(n))%>%
-  mutate(num_Jasmine1, total = sum(num_Jasmine1))
+  mutate(num_Jasmine1, total1 = sum(num_Jasmine1))
 
-jasmine2 <- babies %>%
+jasmine2 <- names %>%
   filter(str_detect(name, "^Jasmine$"))%>%
   filter(year < 2000, year > 1980)%>%
   group_by(year)%>%
   summarise(num_Jasmine2 = sum(n))%>%
-  mutate(num_Jasmine2, total1 = sum(num_Jasmine2))
+  mutate(num_Jasmine2, total2 = sum(num_Jasmine2))
 
-J_percentile1 <- as.tibble(jasmine1)%>%
-  mutate(percentile = ((num_Jasmine1/total)/(1999-1981))*100)
+J_percentile1 <- jasmine2%>%
+   left_join(names, by = "year")%>%
+  mutate(percentile1 = ((total2/total)/(1999-1981))*100)
 J_percentile1
 
-J_percentile2 <- as.tibble(jasmine2) %>%
-  mutate(percentile1 = ((num_Jasmine2/total1)/(2017- 1999))*100)
+J_percentile2 <- jasmine1%>%
+  left_join(names, by = "year")%>%
+  mutate(percentile2 = ((total1/total)/(2017- 1999))*100)
 J_percentile2
   
 
 ```
-####Comments Continued 
+####Comments Continued: 
+ As far as the actual change in proportions, when comparing the number of babies named "Jasmine" from my birthyear, in 1999 to 2017, I noticed that there is a smaller frquency of occurences of the name. This supports my earlier suggestion of the decrease in naming babies "Jasmine" after the release of the Aladdin movie. In the 18 years before my birthyear, the same trend as mentioned before occured, where there was a general spkie in babies being named "Jasmine" after the relase of the original book. The relative change is expressed as a percentile  within each of the final two data pieces that I have created of all changes in baby name proportions over the timeframes mentioned above. 
 
 
 ```{r}
-#ggplot(J_percentile1, aes(num_Jasmine1), fill = jasmine1) +
-#  geom_histogram(binwidth = 0.1)
-```
-#### Final Comments
+ggplot(jasmine1, aes(num_Jasmine1)) +
+  geom_freqpoly(bins = 50, color  = 'blue')+
+  labs(title = "Proportion of Jasmine's from 1981 to 1999 ")
 
-###WHO DID WHAT
-Adam created new data tables and calculated proportions of babies named Adam compared to babies with names starting with "Ada" and graphed the two together.  He also created graphs showing the trend in popularity of his name over the 22 years before he was born, until 2017.  He then calculated the percentiles of percentage of babies named Adam by year. Richard created data tables and sets based on babies named Richard or babies that started with "RIC." Richard then used those new data tables to compare the popularity of "Richard's" among names that started with "RIC." As mentioned before, graphs were created to depict the trend in popularity of babies named Richard 18 years before his birth year, at his birth year (which was 1999), and in 2017. Percentages indicated that Richard was on a downward decline in terms of popularity and Richard's name was much more popular at his birth year compared to 2017. Erin contributed to the two group tasks of finding the Rachel and Ariel numbers and name differences. She was able to do this by filtering for the babynames$names to the specifics, then she used str_detect to count for the string variation names of Ariel and Rachel. Overall, I discovered that Rachel is a more common name than Ariel has been over the years. Then, for The Little Mermaid, I was able to do similar actions for the previous lab question, but I used proportions along with str_detect. For Erin's individual part, she contributed her data for 'Erin' and found it was popular around the 1980s and has been a slow decline ever since. 
+ggplot(jasmine2, aes(num_Jasmine2)) +
+  geom_freqpoly(bins = 50, color  = 'purple')+
+  labs(title = "Proportion of Jasmine's from 1999 to 2017 ")
+
+```
+
+####Final Comments: 
+The two plots above, represent the changes in proportion over the timeframe found. This included the time span of 18 years as it was concluded after subtracting the birthyear from 2017. 
+
+###WHO DID WHAT - 
+Adam created new data tables and calculated proportions of babies named Adam compared to babies with names starting with "Ada" and graphed the two together.  He also created graphs showing the trend in popularity of his name over the 22 years before he was born, until 2017.  He then calculated the percentiles of percentage of babies named Adam by year. Richard created data tables and sets based on babies named Richard or babies that started with "RIC." Richard then used those new data tables to compare the popularity of "Richard's" among names that started with "RIC." As mentioned before, graphs were created to depict the trend in popularity of babies named Richard 18 years before his birth year, at his birth year (which was 1999), and in 2017. Percentages indicated that Richard was on a downward decline in terms of popularity and Richard's name was much more popular at his birth year compared to 2017. Erin contributed to the two group tasks of finding the Rachel and Ariel numbers and name differences. She was able to do this by filtering for the babynames$names to the specifics, then she used str_detect to count for the string variation names of Ariel and Rachel. Overall, I discovered that Rachel is a more common name than Ariel has been over the years. Then, for The Little Mermaid, I was able to do similar actions for the previous lab question, but I used proportions along with str_detect. For Erin's individual part, she contributed her data for 'Erin' and found it was popular around the 1980s and has been a slow decline ever since. Jasmine manipulated two subsets of a histogram. I decided to go with these graph instead becuase I believed that it shows the more distinct trend in babies named "Jasmine" within the two time frames that have come from my data set. I also made sure that all four of my graphs were labled and added in color to enhance the asthetics as well as to distinguish the popoularity of my name between certain time periods relating to similar trends that we noticed from the Ariel data, as Jasmine is aso a Disney Princess. I took a similar approach and decided to compare the results of babies named "Jasmine" before and after the movie, Aladdin, had been released.
