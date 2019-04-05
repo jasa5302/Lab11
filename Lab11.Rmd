@@ -10,32 +10,82 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 ###Ariel and Rachel Regexs
 ```{r}
-girls1 <- filter(babynames,str_detect(babynames$name,"A"),year == 1988,sex == "F")
-girls2 <- filter(babynames,str_detect(babynames$name,"A"),year==1990,sex=="F")
+Anames <- filter(babynames,str_detect(babynames$name,"A"),year == 1988,sex == "F")
+Anames2 <- filter(babynames,str_detect(babynames$name,"A"),year==1990,sex=="F")
 
-girls <- inner_join(girls1,girls2,by="name") %>% mutate(diff=prop.y-prop.x) %>% select(name,prop.x,prop.y,diff)
+names <- inner_join(Anames,Anames2,by="name") %>% mutate(diff=prop.y-prop.x) %>% select(name,prop.x,prop.y,diff)
 
-filter(babynames,str_detect(babynames$name,"Ra[ey]?ch.*l"),year == 1973, sex == "F") %>% count(wt=n) 
+year1973 <- filter(babynames,str_detect(babynames$name,"Ra[ey]?ch.*l"),year == 1973, sex == "F") %>% count(wt=n) 
 #8346
 
-filter(babynames,str_detect(babynames$name,"Ra[ey]?ch.*l"),year == 1988, sex == "F") %>% count(wt=n) 
+year1988 <- filter(babynames,str_detect(babynames$name,"Ra[ey]?ch.*l"),year == 1988, sex == "F") %>% count(wt=n) 
 #19946
 
-filter(babynames,str_detect(babynames$name,"Ra[ey]?ch.*l"),year == 1990,sex == "F") %>% count(wt=n) 
+year1990 <- filter(babynames,str_detect(babynames$name,"Ra[ey]?ch.*l"),year == 1990,sex == "F") %>% count(wt=n) 
 #20369
 
-filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year == 1973, sex == "F") %>% count(wt=n) 
+year2017 <- filter(babynames,str_detect(babynames$name,"Ra[ey]?ch.*l"),year == 2017,sex == "F") %>% count(wt=n) 
+
+year1973_2 <- filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year == 1973, sex == "F") %>% count(wt=n) 
 #52
 
-filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year == 1988, sex == "F") %>% count(wt=n) 
+year1988_2 <- filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year == 1988, sex == "F") %>% count(wt=n) 
 #1617	
 
-filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year == 1990,sex == "F") %>% count(wt=n) 
+year1990_2 <- filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year == 1990,sex == "F") %>% count(wt=n) 
 #5366
 
+year2017_2 <- filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year == 2017,sex == "F") %>% count(wt=n) 
+
+Arieldiff <- filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year==1990,sex=="F") %>% count(wt=prop) - filter(babynames,str_detect(babynames$name,"Ar[iy]+.l+[^a]?$"),year==1988,sex=="F") %>% count(wt=prop)
+
+Rachel <- filter(babynames,str_detect(babynames$name,"Ra[ey]?ch.*l"),year%in%c(1973,1988,1990)) %>% filter(name!="Rachelann") %>% filter(name!="Rachelanne")
+
+Racheldiff <- filter(Rachel,year==1990,sex=="F") %>% count(wt=prop) - filter(Rachel,year==1988,sex=="F") %>% count(wt=prop)
+
+```
+```{r echo = FALSE, results = 'asis'}
+library(knitr)
+kable(year1973, caption = "The number of females with the name 'Rachel' in 1973")
+```
+```{r echo = FALSE, results = 'asis'}
+library(knitr)
+kable(year1988, caption = "The number of females with the name 'Rachel' in 1988")
+```
+```{r echo = FALSE, results = 'asis'}
+library(knitr)
+kable(year1990, caption = "The number of females with the name 'Rachel' in 1990")
+```
+```{r echo = FALSE, results = 'asis'}
+library(knitr)
+kable(year2017, caption = "The number of females with the name 'Rachel' in 2017")
+```
+```{r echo = FALSE, results = 'asis'}
+library(knitr)
+kable(year1973_2, caption = "The number of females with the name 'Ariel' in 1973")
+```
+```{r echo = FALSE, results = 'asis'}
+library(knitr)
+kable(year1988_2, caption = "The number of females with the name 'Ariel' in 1988")
+```
+```{r echo = FALSE, results = 'asis'}
+library(knitr)
+kable(year1990_2, caption = "The number of females with the name 'Ariel' in 1990")
+```
+```{r echo = FALSE, results = 'asis'}
+library(knitr)
+kable(year2017_2, caption = "The number of females with the name 'Ariel' in 2017")
+```
+```{r echo = FALSE, results = 'asis'}
+library(knitr)
+kable(Arieldiff, caption = "The difference in proportion of the female Ariel baby names over time")
+```
+```{r echo = FALSE, results = 'asis'}
+library(knitr)
+kable(Racheldiff, caption = "The difference in proportion of the female Ariel baby names over time")
 ```
 ####Comments
-The name Rachel in comparison to Ariel was more popular. In 1973, the variation of the name Rachel began with 8,346, but then drastically grew to 20,369 in 1990. 
+Over the time between 1973 and 1990, the popularity of the name was overall more common than the name 'Ariel'. The name 'Ariel' spiked between the years 1989 and 1990 from 1,617 to 5,366 females with the name. The chance of the name 'Rachel' was more common than the name 'Ariel', due to the simplicity in the name 'Rachel'. In 2017, the name 'Rachel' has almost double number of females than the name 'Ariel'.
 
 ###The Little Mermaid Effect
 ```{r}
