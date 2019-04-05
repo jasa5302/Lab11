@@ -292,8 +292,23 @@ ggplot(data = data3) +
   geom_line(mapping = aes(x = year, y = proportion), color = "pink") + 
   geom_line(mapping = aes(x = year, y = proportionERIN), color = "blue") + 
   labs(title = "Proportion of names starting with 'ERI'(pink) compared to the name 'ERIN'(blue) over time")
-```
 
+BirthYearErin <- data3 %>%
+  select(year,num_ERIN, proportionERIN)%>%
+  filter(between(year,2000,2017))
+
+ggplot(data = BirthYearErin)+
+  geom_line(mapping = aes(x = year, y = proportionERIN))+
+  labs(title = "Proportion of babies named 'Erin' from 2000 to 2017")
+
+BeforeBirthERIN <- data3 %>%
+  select(year, num_ERIN, proportionERIN)%>%
+  filter(between(year,1983,2000))
+
+ggplot(data = BeforeBirthERIN)+
+  geom_line(mapping = aes(x = year, y = proportionERIN))+
+  labs(title = "Proportion of babies named 'Erin' from 1983 to 2000")
+```
 ####Comments
 In order to find the proportions of names that began with "ERI" or my full name "ERIN", I incorporated the join function to join the babynames dataset for the different manipulated names. As shown by the data, my name wasn't popular until the 1980s where names beginning with "Eri" and named "Erin" peaked. Then, around the time I was born the popularity was declining. The popularity of a name starting with "Eri" was higher than "Erin", because there are various manipulations of name that involve the same three letters, which causes the higher proportion in pink on the graph. 
 
@@ -371,4 +386,4 @@ J_percentile2
 #### Final Comments
 
 ###WHO DID WHAT
-Adam created new data tables and calculated proportions of babies named Adam compared to babies with names starting with "Ada" and graphed the two together.  He also created graphs showing the trend in popularity of his name over the 22 years before he was born, until 2017.  He then calculated the percentiles of percentage of babies named Adam by year. Richard created data tables and sets based on babies named Richard or babies that started with "RIC." Richard then used those new data tables to compare the popularity of "Richard's" among names that started with "RIC." As mentioned before, graphs were created to depict the trend in popularity of babies named Richard 18 years before his birth year, at his birth year (which was 1999), and in 2017. Percentages indicated that Richard was on a downward decline in terms of popularity and Richard's name was much more popular at his birth year compared to 2017.
+Adam created new data tables and calculated proportions of babies named Adam compared to babies with names starting with "Ada" and graphed the two together.  He also created graphs showing the trend in popularity of his name over the 22 years before he was born, until 2017.  He then calculated the percentiles of percentage of babies named Adam by year. Richard created data tables and sets based on babies named Richard or babies that started with "RIC." Richard then used those new data tables to compare the popularity of "Richard's" among names that started with "RIC." As mentioned before, graphs were created to depict the trend in popularity of babies named Richard 18 years before his birth year, at his birth year (which was 1999), and in 2017. Percentages indicated that Richard was on a downward decline in terms of popularity and Richard's name was much more popular at his birth year compared to 2017. Erin contributed to the two group tasks of finding the Rachel and Ariel numbers and name differences. She was able to do this by filtering for the babynames$names to the specifics, then she used str_detect to count for the string variation names of Ariel and Rachel. Overall, I discovered that Rachel is a more common name than Ariel has been over the years. Then, for The Little Mermaid, I was able to do similar actions for the previous lab question, but I used proportions along with str_detect. For Erin's individual part, she contributed her data for 'Erin' and found it was popular around the 1980s and has been a slow decline ever since. 
