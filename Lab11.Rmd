@@ -124,7 +124,7 @@ The popularity of the name 'Ariel' increased in popularity between 1988 and 1990
 library(tidyverse)
 library(babynames)
 
-data <- babynames
+
 
 names <- babynames %>%
   group_by(year)%>%
@@ -169,13 +169,22 @@ BeforeBirth <- newnewdata %>%
 ggplot(data = BeforeBirth)+
   geom_line(mapping = aes(x = year, y = prop_adam))+
   labs(title = "Prop of babies named 'Adam' from 1974 - 1996")
+
 ```
 
 ####Comments
 From my first graph I found that there were a much higher proportion of names that started with "Ada" than there were babies actually named "Adam". However this trend changed around 1960, and from about 1960 - 2000 almost all babies with names starting with "Ada" were actually named "Adam", this trend again changed around 2000 where the proportion of babies named "Adam" began to decline, while the proportion of babies with names starting with "Ada" began to increase rather sharply.  From my second set of graphs, I found that there was a spike in popularity of the name Adam from about 1975 - 1985, and then from then until 2017 there has been a steady decline in popularity of the name.
 
 
+```{r}
+percent_new <- newnewdata %>%
+  mutate(percent = prop_adam * 100)
 
+quantile(percent_new$percent)
+```
+
+####More comments
+These percentiles demonstrate the percentage of babies named "Adam" relative to other baby names in each year.  The 50th percentile shows that on average, most years recorded around 3.1% of baby names to be "Adam".  The 100th percentile shows that on very rare occasions there were actually years that recorded close to 70% of baby names to be Adam.
 
 ### Richard's Findings
 
@@ -183,12 +192,10 @@ From my first graph I found that there were a much higher proportion of names th
 library(tidyverse)
 library(babynames)
 
-data <- babynames
+#data <- babynames
 
 NamesRIC <- babynames %>%
   filter(str_detect(name, "^Ric") == T)
-
-NamesRIC
 
 PropName <- babynames %>%
   group_by(year) %>%
@@ -223,21 +230,17 @@ BirthYearName <- babynames %>%
   filter(str_detect(name, "^Richard$")) %>%
   summarise(number_Richardbirth = sum(n)) 
 
-BirthYearName
-
 CurrentName <- babynames %>%
   filter(year == 2017) %>%
   filter(str_detect(name, "^Richard$")) %>%
   summarise(number_Richardcurrent = sum(n))
 
-CurrentName
 
 BeforeBirthYearName <- babynames %>%
   filter(year == 1981) %>%
   filter(str_detect(name, "^Richard$")) %>%
   summarise(number_Richardbefore = sum(n))
 
-BeforeBirthYearName
 
 ```
 ####Comments
@@ -280,3 +283,8 @@ ggplot(data = data3) +
 
 ####Comments
 In order to find the proportions of names that began with "ERI" or my full name "ERIN", I incorporated the join function to join the babynames dataset for the different manipulated names. As shown by the data, my name wasn't popular until the 1980s where names beginning with "Eri" and named "Erin" peaked. Then, around the time I was born the popularity was declining. The popularity of a name starting with "Eri" was higher than "Erin", because there are various manipulations of name that involve the same three letters, which causes the higher proportion in pink on the graph. 
+
+
+
+###WHO DID WHAT
+Adam created new data tables and calculated proportions of babies named Adam compared to babies with names starting with "Ada" and graphed the two together.  He also created graphs showing the trend in popularity of his name over the 22 years before he was born, until 2017.  He then calculated the percentiles of percentage of babies named Adam by year.
